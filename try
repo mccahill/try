@@ -42,6 +42,12 @@ do
     if [ -d "$top_dir_abs" ] && ! mountpoint -q "$top_dir_abs"; then
         ## TODO: The 
         mount -t overlay overlay -o lowerdir=/"$top_dir",upperdir="$SANDBOX_DIR"/upperdir/"$top_dir",workdir="$SANDBOX_DIR"/workdir/"$top_dir" "$SANDBOX_DIR"/temproot/"$top_dir" 2>> "$try_mount_log" || echo "Warning: Failed mounting $top_dir_abs as an overlay, see "$try_mount_log"" 1>&2
+
+    ####### a hack to get the overlays mounted for /home and /srv #######
+    elif [ -d "$top_dir_abs" ] && [ "$top_dir_abs" = "/srv" ] || [ "$top_dir_abs" = "/home" ]  ; then
+        mount -t overlay overlay -o lowerdir=/"$top_dir",upperdir="$SANDBOX_DIR"/upperdir/"$top_dir",workdir="$SANDBOX_DIR"/workdir/"$top_dir" "$SANDBOX_DIR"/temproot/"$top_dir" 2>> "$try_mount_log" || echo "Warning: Failed mounting $top_dir_abs as an overlay, see "$try_mount_log"" 1>&2
+    ####### end hack to get the overlays mounted for /home and /srv #######
+
     fi
 done
 
